@@ -49,8 +49,8 @@ std::vector<std::string> levels =
 	"{\"dim\":\"4x4\",\"cc\":{\"0;0;#FFFFFF\",\"0;0;#FFFFFF\",\"0;0;#0000FF\",\"0;0;#0000FF\",\"0;0;#FFFFFF\",\"1;0;#FFFFFF\",\"0;0;#0000FF\",\"0;0;#0000FF\",\"0;0;#FFFFFF\",\"1;0;#000000\",\"0;0;#0000FF\",\"1;0;#0000FF\",\"0;0;#FFFFFF\",\"0;0;#0000FF\",\"0;0;#0000FF\",\"1;0;#FFFFFF\"},\"mc\":\"00000010000000000000000000000000000000000000000000000000000000000\"}"
 };
 
-int width = 3;
-int height = 3;
+int pWidth = 3;
+int pHeight = 3;
 
 Witness<3, 3> w33;
 Witness<3, 4> w34;
@@ -115,7 +115,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		}
 		display.DrawText("Done!", {0.0f, 0.0f}, Colors::black, 0.2f, Graphics::textAlignCenter);
 	}
-	else if (width == 3 && height == 3)
+	else if (pWidth == 3 && pHeight == 3)
 	{
 		if (redrawBackground)
 		{
@@ -130,7 +130,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		iws33.IncrementTime();
 		w33.Draw(display, iws33);
 	}
-	else if (width == 3 && height == 4)
+	else if (pWidth == 3 && pHeight == 4)
 	{
 		if (redrawBackground)
 		{
@@ -145,7 +145,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		iws34.IncrementTime();
 		w34.Draw(display, iws34);
 	}
-	else if (width == 4 && height == 4)
+	else if (pWidth == 4 && pHeight == 4)
 	{
 		if (redrawBackground)
 		{
@@ -213,52 +213,53 @@ bool MyClickHandler(unsigned long , int viewport, int windowX, int windowY, poin
 	
 	if (e == kMouseUp)
 	{
-		if (width == 3 && height == 3)
+		if (pWidth == 3 && pHeight == 3)
 		{
 			if (w33.Click(p, iws33))
 			{
 				if (w33.GoalTest(iws33.ws))
 				{
-					std::string tmp = getTextBuffer();
+				  #pragma warning removed buffer
+				  std::string tmp;// = getTextBuffer(); // TODO: put this functionality back in
 					submitTextToBuffer((GetPuzzleSVG()+"<br/>"+tmp).c_str());
 					redrawBackground = true;
 					whichPuzzle++;
 					if (whichPuzzle < levels.size())
-						w33.GetDimensionsFromHashString(levels[whichPuzzle], width, height);
+						w33.GetDimensionsFromHashString(levels[whichPuzzle], pWidth, pHeight);
 				}
 				else
 					iws33.Reset();
 			}
 		}
-		else if (width == 3 && height == 4)
+		else if (pWidth == 3 && pHeight == 4)
 		{
 			if (w34.Click(p, iws34))
 			{
 				if (w34.GoalTest(iws34.ws))
 				{
-					std::string tmp = getTextBuffer();
+				  std::string tmp;// = getTextBuffer(); // TODO: Put this functionality back in!
 					submitTextToBuffer((GetPuzzleSVG()+"<br/>"+tmp).c_str());
 					redrawBackground = true;
 					whichPuzzle++;
 					if (whichPuzzle < levels.size())
-						w34.GetDimensionsFromHashString(levels[whichPuzzle], width, height);
+						w34.GetDimensionsFromHashString(levels[whichPuzzle], pWidth, pHeight);
 				}
 				else
 					iws34.Reset();
 			}
 		}
-		else if (width == 4 && height == 4)
+		else if (pWidth == 4 && pHeight == 4)
 		{
 			if (w44.Click(p, iws44))
 			{
 				if (w44.GoalTest(iws44.ws))
 				{
-					std::string tmp = getTextBuffer();
+				  std::string tmp;// = getTextBuffer();
 					submitTextToBuffer((GetPuzzleSVG()+"<br/>"+tmp).c_str());
 					redrawBackground = true;
 					whichPuzzle++;
 					if (whichPuzzle < levels.size())
-						w44.GetDimensionsFromHashString(levels[whichPuzzle], width, height);
+						w44.GetDimensionsFromHashString(levels[whichPuzzle], pWidth, pHeight);
 				}
 				else
 					iws44.Reset();
@@ -269,11 +270,11 @@ bool MyClickHandler(unsigned long , int viewport, int windowX, int windowY, poin
 	if (e == kMouseMove)
 	{
 //		printf("Move\n");
-		if (width == 3 && height == 3)
+		if (pWidth == 3 && pHeight == 3)
 			w33.Move(p, iws33);
-		else if (width == 3 && height == 4)
+		else if (pWidth == 3 && pHeight == 4)
 			w34.Move(p, iws34);
-		else if (width == 4 && height == 4)
+		else if (pWidth == 4 && pHeight == 4)
 			w44.Move(p, iws44);
 		
 //		if (whichPuzzle < 3)

@@ -19,7 +19,7 @@ bool running = false;
 const int numGroups = 8;
 const int numElements = 520;
 
-std::vector<recColor> groupColor = {colors::lightgreen, colors::darkred, colors::cyan, colors::yellow, colors::darkblue, colors::orange, colors::lightred, colors::lightgray};
+std::vector<rgbColor> groupColor = {Colors::lightgreen, Colors::darkred, Colors::cyan, Colors::yellow, Colors::darkblue, Colors::orange, Colors::lightred, Colors::lightgray};
 
 void AssignGroups();
 
@@ -147,25 +147,25 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		for (double x = -1; x <= 1; x += step)
 		{
 			int group = GetClosestGroup({x, y});
-			glColor3f(groupColor[group].r, groupColor[group].g, groupColor[group].b);
-			DrawBox(x, y, 0, step);
+			//glColor3f(groupColor[group].r, groupColor[group].g, groupColor[group].b);
+			//DrawBox(x, y, 0, step);
 		}
 	}
 
 	for (int x = 0; x < data.size(); x++)
 	{
-		glColor3f(0.5, 0.5, 0.5);
-		DrawBox(data[x].data.first, data[x].data.second, -0.010, pointSize);
+	  //glColor3f(0.5, 0.5, 0.5);
+	  //DrawBox(data[x].data.first, data[x].data.second, -0.010, pointSize);
 		int group = data[x].group;
-		glColor3f(groupColor[group].r, groupColor[group].g, groupColor[group].b);
-		DrawBox(data[x].data.first, data[x].data.second, -0.011-pointSize/2, pointSize/2.0);
+		//glColor3f(groupColor[group].r, groupColor[group].g, groupColor[group].b);
+		//DrawBox(data[x].data.first, data[x].data.second, -0.011-pointSize/2, pointSize/2.0);
 	}
 	for (int x = 0; x < groups.size(); x++)
 	{
-		glColor3f(0, 0, 0);
-		DrawBox(groups[x].first, groups[x].second, -0.012, pointSize);
-		glColor3f(1, 1, 1);
-		DrawBox(groups[x].first, groups[x].second, -0.013-pointSize/2, pointSize/2.0);
+	  //glColor3f(0, 0, 0);
+	  //DrawBox(groups[x].first, groups[x].second, -0.012, pointSize);
+	  //glColor3f(1, 1, 1);
+	  //DrawBox(groups[x].first, groups[x].second, -0.013-pointSize/2, pointSize/2.0);
 	}
 	if (running)
 		MyDisplayHandler(windowID, kNoModifier, 't');

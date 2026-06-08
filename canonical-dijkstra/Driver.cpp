@@ -17,6 +17,7 @@
 #include "MapOverlay.h"
 #include "CanonicalGrid.h"
 #include <string>
+#include <fstream>
 
 MapEnvironment *me = 0;
 CanonicalGrid::CanonicalGrid *grid;
@@ -107,18 +108,18 @@ int frameCnt = 0;
 
 void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 {
-	me->OpenGLDraw();
+  Graphics::Display &display = getCurrentContext()->display;
+  me->Draw(display);
 	
 	if (mouseDrag)
 	{
 		me->SetColor(0.0, 1.0, 0.0);
-		me->OpenGLDraw(start);
+		me->Draw(display, start);
 		me->SetColor(0.5, 0.5, 0.5);
-		me->GLDrawLine(start, goal);
+		me->DrawLine(display, start, goal, 0.05f);
 	}
 	
 	{
-		glLineWidth(1);
 		CanonicalGrid::xyLoc gLoc(start.x, start.y);
 		std::deque<CanonicalGrid::xyLoc> queue;
 		queue.push_back(gLoc);
@@ -137,7 +138,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 				else {
 					grid->SetColor(1.0, 0.5, 0.5);
 				}
-				grid->GLDrawLine(queue.front(), s);
+				grid->DrawLine(display, queue.front(), s, 0.05f);
 				visited[s.x+s.y*grid->GetMap()->GetMapWidth()] = true;
 			}
 			queue.pop_front();
@@ -146,7 +147,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 	
 	if (running)
 	{
-		canDijkstra.OpenGLDraw();
+		canDijkstra.Draw(display);
 
 		if (path.size() == 0)
 		{
@@ -155,12 +156,12 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		}
 		else {
 			me->SetColor(0, 1, 0);
-			glLineWidth(10);
+			//glLineWidth(10);
 			for (int x = 1; x < path.size(); x++)
 			{
-				me->GLDrawLine(path[x-1], path[x]);
+			  me->DrawLine(display, path[x-1], path[x], 0.05f);
 			}
-			glLineWidth(1);
+			//glLineWidth(1);
 		}
 	}
 }
@@ -208,13 +209,6 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 			break;
 		case '0':
 		case '\t':
-			
-			if (mod != kShiftDown)
-				SetActivePort(windowID, (GetActivePort(windowID)+1)%GetNumPorts(windowID));
-			else
-			{
-				SetNumPorts(windowID, 1+(GetNumPorts(windowID)%MAXPORTS));
-			}
 			break;
 		case 'p':
 			if (stepsPerFrame > 0)

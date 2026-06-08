@@ -650,18 +650,18 @@ void RedoHDDisplay()
 
 	if (hdSearchType == 0)
 	{
-		submitTextToBuffer("Showing Canonical");
-		CanonicalGrid::xyLoc l(start.x, start.y);
-		DoHighwayDimension2(l);
+	  submitTextToBuffer("Showing Canonical");
+	  CanonicalGrid::xyLoc l(start.x, start.y);
+	  DoHighwayDimension2(l);
 	}
 	else if (hdSearchType == 1)
 	{
-		submitTextToBuffer("Showing Regular (Individual searches)");
-		DoHighwayDimension(start);
+	  submitTextToBuffer("Showing Regular (Individual searches)");
+	  DoHighwayDimension(start);
 	}
 	else {
-		submitTextToBuffer("Showing Regular (Single dijkstra search)");
-		DoHighwayDimension1(start);
+	  submitTextToBuffer("Showing Regular (Single dijkstra search)");
+	  DoHighwayDimension1(start);
 	}
 }
 

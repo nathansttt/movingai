@@ -189,7 +189,6 @@ void MyWindowHandler(unsigned long windowID, tWindowEventType eType)
 		printf("Window %ld created\n", windowID);
 		InstallFrameHandler(MyFrameHandler, windowID, 0);
 		SetNumPorts(windowID, 1);
-		glClearColor(0.9, 0.9, 0.9, 1.0);
 
 		h.heuristics.push_back(&toh);
 		h.lookups.push_back({kLeafNode, 0, 0});

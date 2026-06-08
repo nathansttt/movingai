@@ -1,3 +1,9 @@
+# emacs backup files
+*~
+
+# temporary files
+\.\#*
+
 # Prerequisites
 *.d
 

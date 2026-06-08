@@ -11,15 +11,9 @@
 
 #include "Common.h"
 #include "Sample.h"
-#include "UnitSimulation.h"
-#include "EpisodicSimulation.h"
 #include "Map2DEnvironment.h"
-#include "RandomUnits.h"
-#include "AStar.h"
 #include "TemplateAStar.h"
 #include "GraphEnvironment.h"
-#include "MapSectorAbstraction.h"
-#include "GraphRefinementEnvironment.h"
 #include "ScenarioLoader.h"
 #include "BFS.h"
 #include "PEAStar.h"
@@ -28,7 +22,9 @@
 #include "FPUtil.h"
 #include "CanonicalGrid.h"
 #include "JPS.h"
-#include "gJPS.h"
+//#include "gJPS.h"
+#include <fstream>
+#include "Timer.h"
 
 bool mouseTracking = false;
 bool runningSearch1 = false;
@@ -48,8 +44,6 @@ void WeightedAStarExperiments(char *scenario, double weight);
 void DijkstraExperiments(char *scenario);
 void JPSExperiments(char *scenario, double weight, uint32_t jump);
 void OpenGridExperiments(int width);
-
-std::vector<UnitMapSimulation *> unitSims;
 
 TemplateAStar<graphState, graphMove, GraphEnvironment> astar;
 
@@ -130,19 +124,16 @@ void CreateSimulation(int id)
 	}
 	map->SetTileSet(kWinter);
 
-	unitSims.resize(id+1);
-	unitSims[id] = new UnitSimulation<xyLoc, tDirection, MapEnvironment>(new MapEnvironment(map));
-	unitSims[id]->SetStepType(kMinTime);
 	SetNumPorts(id, 1);
 	grid = new CanonicalGrid::CanonicalGrid(map);
 	if (ma1 == 0)
 	{
-		ma1 = new MapEnvironment(unitSims[id]->GetEnvironment()->GetMap());
+	  ma1 = new MapEnvironment(map);
 	}
 	if (ma2 == 0)
 	{
-		ma2 = new CanonicalGrid::CanonicalGrid(unitSims[id]->GetEnvironment()->GetMap());
-		ma2->SetEightConnected();
+	  ma2 = new CanonicalGrid::CanonicalGrid(map);
+	  ma2->SetEightConnected();
 	}
 	jps = new JPS(map);
 	jps->SetJumpLimit(0);
@@ -196,8 +187,6 @@ void MyWindowHandler(unsigned long windowID, tWindowEventType eType)
 		ma1 = 0;
 		delete ma2;
 		ma2 = 0;
-		delete unitSims[windowID];
-		unitSims[windowID] = 0;
 		runningSearch1 = false;
 		runningSearch2 = false;
 		runningSearch3 = false;
@@ -334,6 +323,7 @@ std::string DrawCanonicalOrdering(bool gray = false)
 std::string DrawRegularGoalArea(tDirection dir, bool drawBound, bool svg = false)
 {
 	std::string str;
+  /*
 	int minx = 1000, miny = 1000;
 	int maxx = 0, maxy = 0;
 	
@@ -346,7 +336,7 @@ std::string DrawRegularGoalArea(tDirection dir, bool drawBound, bool svg = false
 	regAstar.SetStopAfterGoal(false);
 	regAstar.GetPath(ma1, cStart, cStart, path);
 	ma1->SetColor(0.0, 0.0, 1.0);
-	ma1->OpenGLDraw(cStart);
+	//ma1->OpenGLDraw(cStart);
 	
 	std::deque<xyLoc> queue;
 	// draw everything
@@ -369,7 +359,7 @@ std::string DrawRegularGoalArea(tDirection dir, bool drawBound, bool svg = false
 		{
 			ma1->GetSuccessors(data.data, v);
 			CanonicalGrid::xyLoc t(data.data.x, data.data.y);
-			grid->OpenGLDraw(t);
+			//grid->OpenGLDraw(t);
 			if (svg)
 				str += ma1->SVGDraw(data.data);
 			//ma1->OpenGLDraw(data.data);
@@ -394,6 +384,7 @@ std::string DrawRegularGoalArea(tDirection dir, bool drawBound, bool svg = false
 	}
 	if (drawBound)
 	{
+	  
 		GLdouble t, l, r, b, z, rad, tmp;
 		printf("Bounds: (%d, %d) to (%d, %d)\n", minx, miny, maxx, maxy);
 		ma1->GetMap()->GetOpenGLCoord(minx, miny, l, t, z, rad);
@@ -406,14 +397,16 @@ std::string DrawRegularGoalArea(tDirection dir, bool drawBound, bool svg = false
 			ma1->SetColor(0.0, 0.0, 0.0);
 			str += ma1->SVGFrameRect(minx, miny, maxx, maxy, 4);
 		}
+	  
 	}
-	
+  */
 	return str;
 }
 
 std::string DrawJPSGoalArea(CanonicalGrid::tDirection dir, bool drawBound, bool svg = false)
 {
 	std::string str;
+	/*
 	int minx = 1000, miny = 1000;
 	int maxx = 0, maxy = 0;
 	TemplateAStar<CanonicalGrid::xyLoc, CanonicalGrid::tDirection, CanonicalGrid::CanonicalGrid> canAstar;
@@ -443,7 +436,7 @@ std::string DrawJPSGoalArea(CanonicalGrid::tDirection dir, bool drawBound, bool 
 		if (canAstar.GetClosedItem(next, data))
 		{
 			grid->GetSuccessors(data.data, v);
-			grid->OpenGLDraw(data.data);
+			//grid->OpenGLDraw(data.data);
 			if (svg)
 				str += ma1->SVGDraw({data.data.x, data.data.y});
 
@@ -468,7 +461,8 @@ std::string DrawJPSGoalArea(CanonicalGrid::tDirection dir, bool drawBound, bool 
 	}
 	if (drawBound)
 	{
-		GLdouble t, l, r, b, z, rad, tmp;
+	
+	  GLdouble t, l, r, b, z, rad, tmp;
 		printf("Bounds: (%d, %d) to (%d, %d)\n", minx, miny, maxx, maxy);
 		ma1->GetMap()->GetOpenGLCoord(minx, miny, l, t, z, rad);
 		ma1->GetMap()->GetOpenGLCoord(maxx, maxy, r, b, z, rad);
@@ -480,7 +474,9 @@ std::string DrawJPSGoalArea(CanonicalGrid::tDirection dir, bool drawBound, bool 
 			ma1->SetColor(0.0, 0.0, 0.0);
 			str += ma1->SVGFrameRect(minx, miny, maxx, maxy, 4);
 		}
+	
 	}
+	*/
 	return str;
 }
 
@@ -488,7 +484,6 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 {
 	if (viewport == 0)
 	{
-		unitSims[windowID]->StepTime(1.0/30.0);
 	}
 
 	// draw canonical ordering in SVG
@@ -540,7 +535,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 				else {
 					grid->SetColor(1.0, 0.0, 0.0);
 				}
-				grid->GLDrawLine(queue.front(), s);
+				//grid->GLDrawLine(queue.front(), s);
 				visited[s.x+s.y*grid->GetMap()->GetMapWidth()] = true;
 			}
 			queue.pop_front();
@@ -562,7 +557,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		}
 	}
 	
-	unitSims[windowID]->OpenGLDraw();
+	//unitSims[windowID]->OpenGLDraw();
 	
 	if (screenShot&&0)
 	{
@@ -605,26 +600,12 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		svgFile.close();
 	}
 
-	if (mouseTracking)
-	{
-		glBegin(GL_LINES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		Map *m = unitSims[windowID]->GetEnvironment()->GetMap();
-		GLdouble x, y, z, r;
-		m->GetOpenGLCoord(px1, py1, x, y, z, r);
-		glVertex3f(x, y, z-3*r);
-		m->GetOpenGLCoord(px2, py2, x, y, z, r);
-		glVertex3f(x, y, z-3*r);
-		glEnd();
-	}
-	
-	
 	if (GetNumPorts(windowID) == 3)
 	{
 		if ((ma1) && (viewport == 0)) // only do this once...
 		{
 			ma1->SetColor(0.0, 0.5, 0.0, 0.75);
-			if (runningSearch1 && !unitSims[windowID]->GetPaused())
+			if (runningSearch1)// && !unitSims[windowID]->GetPaused())
 			{
 				ma1->SetColor(0.0, 0.0, 1.0, 0.75);
 				for (int x = 0; x < gStepsPerFrame; x++)
@@ -639,8 +620,8 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 					}
 				}
 			}
-			if (path.size() == 0)
-				a1.OpenGLDraw();
+			//			if (path.size() == 0)
+			//	a1.OpenGLDraw();
 		}
 
 		if ((ma2) && viewport == 1)
@@ -661,8 +642,8 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 					}
 				}
 			}
-			if (path2.size() == 0)
-				a2.OpenGLDraw();
+			//if (path2.size() == 0)
+			//	a2.OpenGLDraw();
 		}
 		if ((ma1) && viewport == 2)
 		{
@@ -682,7 +663,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 					}
 				}
 			}
-			jps->OpenGLDraw();
+			//jps->OpenGLDraw();
 		}
 	}
 	else if (GetNumPorts(windowID) == 1)
@@ -702,22 +683,22 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 					}
 				}
 			}
-			jps->OpenGLDraw();
+			//jps->OpenGLDraw();
 		}
 	}
 	if (path.size() > 0)
 	{
 		ma1->SetColor(0.0, 1.0, 1.0);
-		for (int x = 0; x < path.size()-1; x++)
-			ma1->GLDrawLine(path[x], path[x+1]);
+		//for (int x = 0; x < path.size()-1; x++)
+		//	ma1->GLDrawLine(path[x], path[x+1]);
 	}
 	if (path3.size() > 0)
 	{
-		glLineWidth(10);
+	  //glLineWidth(10);
 		ma1->SetColor(1.0, 0.0, 1.0);
-		for (int x = 0; x < path3.size()-1; x++)
-			ma1->GLDrawLine(path3[x], path3[x+1]);
-		glLineWidth(1);
+		//for (int x = 0; x < path3.size()-1; x++)
+		//	ma1->GLDrawLine(path3[x], path3[x+1]);
+		//glLineWidth(1);
 	}
 
 	if (recording && viewport == GetNumPorts(windowID)-1)
@@ -725,7 +706,7 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		static int cnt = 0;
 		char fname[255];
 		sprintf(fname, "/Users/nathanst/Movies/tmp/%d%d%d%d", (cnt/1000)%10, (cnt/100)%10, (cnt/10)%10, cnt%10);
-		SaveScreenshot(windowID, fname);
+		//SaveScreenshot(windowID, fname);
 		printf("Saved %s\n", fname);
 		cnt++;
 	}
@@ -782,7 +763,7 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 {
 	switch (key)
 	{
-		case '|': resetCamera(); break;
+	case '|': //resetCamera(); break;
 		case 'r': recording = !recording; break;
 		case '0':
 		case '1':
@@ -815,14 +796,16 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 		case '{':
 		case '}':
 		case '\t':
+		  /*
 			if (mod != kShiftDown)
 				SetActivePort(windowID, (GetActivePort(windowID)+1)%GetNumPorts(windowID));
 			else
 			{
 				SetNumPorts(windowID, 1+(GetNumPorts(windowID)%MAXPORTS));
 			}
+		  */
 			break;
-		case 'p': unitSims[windowID]->SetPaused(!unitSims[windowID]->GetPaused()); break;
+	case 'p': //unitSims[windowID]->SetPaused(!unitSims[windowID]->GetPaused()); break;
 		case 'o':
 		{
 			if (runningSearch1)
@@ -852,6 +835,7 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 
 void MyRandomUnitKeyHandler(unsigned long w, tKeyboardModifier , char)
 {
+  /*
 	printf("Testing Dijkstra vs gJPS\n");
 	Map *m = ma1->GetMap();
 	gJPS gjps;
@@ -885,6 +869,7 @@ void MyRandomUnitKeyHandler(unsigned long w, tKeyboardModifier , char)
 			}
 		}
 	}
+  */
 }
 
 xyLoc GetRandomState()
@@ -896,6 +881,7 @@ xyLoc GetRandomState()
 
 void TestJPS()
 {
+  /*
 	std::vector<xyLoc> states;
 	srandom(1234);
 	const int totalStates = 10000;
@@ -951,7 +937,7 @@ void TestJPS()
 	//	astar.GetPath(r, s, g, ourPath);
 	//	t.EndTimer();
 	//	printf("Astar %f %llu %llu %1.2f\n", t.GetElapsedTime(), astar.GetNodesExpanded(), astar.GetNodesTouched(), r->GetPathLength(ourPath));
-	
+	*/	
 }
 
 
@@ -1015,22 +1001,22 @@ bool MyClickHandler(unsigned long windowID, int, int, point3d loc, tButtonType b
 		switch (mType)
 		{
 			case kMouseDown:
-				unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px1, py1);
+			  //unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px1, py1);
 				startLoc = loc;
-//				unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px1, py1);
+				//				unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px1, py1);
 //				printf("Mouse down at (%d, %d)\n", px1, py1);
 				//MyRandomUnitKeyHandler(0, kShiftDown, 0);
 				break;
 			case kMouseDrag:
 				mouseTracking = true;
-				unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px2, py2);
+				//unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px2, py2);
 				//printf("Mouse tracking at (%d, %d)\n", px2, py2);
 				break;
 			case kMouseUp:
 			{
 				if ((px1 == -1) || (px2 == -1))
 					break;
-				unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px2, py2);
+				//unitSims[windowID]->GetEnvironment()->GetMap()->GetPointFromCoordinate(loc, px2, py2);
 
 				printf("\n------\nSearching from (%d, %d) to (%d, %d)\n", px1, py1, px2, py2);
 				
@@ -1237,7 +1223,7 @@ void DijkstraExperiments(char *scenario)
 	CanonicalGrid::CanonicalGrid *cge = new CanonicalGrid::CanonicalGrid(m);
 	TemplateAStar<xyLoc, tDirection, MapEnvironment, IndexOpenClosed<xyLoc>> astar;
 	TemplateAStar<CanonicalGrid::xyLoc, CanonicalGrid::tDirection, CanonicalGrid::CanonicalGrid, IndexOpenClosed<CanonicalGrid::xyLoc>> canAstar;
-	gJPS gjps;
+	JPS gjps(m); //TODO: should be gJPS?
 	astar.SetStopAfterGoal(false);
 	canAstar.SetStopAfterGoal(false);
 	Timer t;

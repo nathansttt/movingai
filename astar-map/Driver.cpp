@@ -14,7 +14,6 @@
 #include "UnitSimulation.h"
 #include "EpisodicSimulation.h"
 #include "Map2DEnvironment.h"
-#include "RandomUnits.h"
 #include "TemplateAStar.h"
 #include "GraphEnvironment.h"
 #include "ScenarioLoader.h"

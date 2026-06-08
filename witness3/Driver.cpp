@@ -14,7 +14,6 @@
 #include "UnitSimulation.h"
 #include "EpisodicSimulation.h"
 #include "Map2DEnvironment.h"
-#include "RandomUnits.h"
 #include "TemplateAStar.h"
 #include "GraphEnvironment.h"
 #include "ScenarioLoader.h"
@@ -290,7 +289,7 @@ bool MyClickHandler(unsigned long , int viewport, int windowX, int windowY, poin
 				}
 				if (cnt == firstSet[whichPuzzle].size())
 				{
-					std::string tmp = getTextBuffer();
+				  std::string tmp;// = getTextBuffer();
 					submitTextToBuffer((GetPuzzleSVG()+"<br/>"+tmp).c_str());
 					whichPuzzle++;
 					iws3.Reset();
@@ -313,7 +312,7 @@ bool MyClickHandler(unsigned long , int viewport, int windowX, int windowY, poin
 				}
 				if (cnt == secondSet[whichPuzzle-3].size())
 				{
-					std::string tmp = getTextBuffer();
+				  std::string tmp;// = getTextBuffer();
 					submitTextToBuffer((GetPuzzleSVG()+"<br/>"+tmp).c_str());
 					whichPuzzle++;
 					iws4.Reset();

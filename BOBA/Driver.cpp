@@ -132,7 +132,7 @@ public:
 			GetStateFromHash(x, l);
 			int dist = costs[x];
 			Graphics::rect r;
-			GLdouble px, py, t, rad;
+			double px, py, t, rad;
 			map->GetCoord(l.x, l.y, px, py, t, rad);
 			if (map->GetTerrainType(l.x, l.y) != kGround)
 				continue;

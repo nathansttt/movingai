@@ -15,6 +15,7 @@
 #include "TemplateAStar.h"
 #include "TextOverlay.h"
 #include <string>
+#include <fstream>
 
 enum mode {
 	kAddNodes,

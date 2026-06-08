@@ -102,7 +102,7 @@ void MyWindowHandler(unsigned long windowID, tWindowEventType eType)
 	else if (eType == kWindowCreated)
 	{
 		printf("Window %ld created\n", windowID);
-		glClearColor(0.99, 0.99, 0.99, 1.0);
+		//glClearColor(0.99, 0.99, 0.99, 1.0);
 		InstallFrameHandler(MyFrameHandler, windowID, 0);
 		SetNumPorts(windowID, 2);
 		g = new Graph();
@@ -124,48 +124,50 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 		if (ge == 0 || g == 0)
 			return;
 		ge->SetColor(0.5, 0.5, 1.0);
-		ge->OpenGLDraw();
+		//ge->OpenGLDraw();
 		
 		if (from != -1 && to != -1)
 		{
-			glLineWidth(4.);
-			ge->SetColor(1, 0, 0);
-			ge->GLDrawLine(from, to);
+		  //glLineWidth(4.);
+		  ge->SetColor(1, 0, 0);
+		  //ge->GLDrawLine(from, to);
 		}
 		
 		if (running)
 		{
 			//astar.DoSingleSearchStep(path);
-			mm.OpenGLDraw();
+		  //mm.OpenGLDraw();
 		}
 		else {
 			ge->SetColor(0.75, 0.75, 1.0);
-			for (int x = 0; x < g->GetNumNodes(); x++)
-				ge->OpenGLDraw(x);
+			//for (int x = 0; x < g->GetNumNodes(); x++)
+			//	ge->OpenGLDraw(x);
 		}
 		
 		if (path.size() > 0)
 		{
 			ge->SetColor(0, 1, 0);
+			/*
 			glLineWidth(10);
 			for (int x = 1; x < path.size(); x++)
 			{
 				ge->GLDrawLine(path[x-1], path[x]);
 			}
 			glLineWidth(1);
+			*/
 		}
 	}
 	if (viewport == 1)
 	{
-		te.OpenGLDraw(windowID);
+	  //te.OpenGLDraw(windowID);
 	}
 	
 	if (recording && viewport == GetNumPorts(windowID)-1)
 	{
 		char fname[255];
 		sprintf(fname, "/Users/nathanst/Movies/tmp/MM-%d%d%d%d",
-				(frameCnt/1000)%10, (frameCnt/100)%10, (frameCnt/10)%10, frameCnt%10);
-		SaveScreenshot(windowID, fname);
+			(frameCnt/1000)%10, (frameCnt/100)%10, (frameCnt/10)%10, frameCnt%10);
+		//SaveScreenshot(windowID, fname);
 		printf("Saved %s\n", fname);
 		frameCnt++;
 		if (path.size() == 0)
@@ -243,12 +245,14 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 //		case '8': edgeCost = 8.0; te.AddLine("Adding edges; New edges cost 8"); m = kAddEdges; break;
 //		case '9': edgeCost = 9.0; te.AddLine("Adding edges; New edges cost 9"); m = kAddEdges; break;
 		case '\t':
-			if (mod != kShiftDown)
+		  /*
+		  if (mod != kShiftDown)
 				SetActivePort(windowID, (GetActivePort(windowID)+1)%GetNumPorts(windowID));
 			else
 			{
 				SetNumPorts(windowID, 1+(GetNumPorts(windowID)%MAXPORTS));
 			}
+		  */
 			break;
 		case 'p':
 			//running = !running;
@@ -349,9 +353,9 @@ void ShowSearchInfo()
 	std::string s;
 	te.Clear();
 	s = "-----> Searching from ";
-	s +=g->GetNode(mm.start)->GetName();
+	//	s +=g->GetNode(mm.start)->GetName();
 	s +=" to ";
-	s += g->GetNode(mm.goal)->GetName();
+	//s += g->GetNode(mm.goal)->GetName();
 	s += " <-----";
 	te.AddLine(s.c_str());
 	te.AddLine("Press 'o' to advance search.");

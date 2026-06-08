@@ -120,8 +120,8 @@ int frameCnt = 0;
 
 void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 {
-	me->OpenGLDraw();
-	mo->OpenGLDraw();
+  //	me->OpenGLDraw();
+  //	mo->OpenGLDraw();
 	
 //	if (start.x != -1 && start.y != -1)
 //	{
@@ -136,24 +136,24 @@ void MyFrameHandler(unsigned long windowID, unsigned int viewport, void *)
 	
 	for (int x = 0; x < h.values.size(); x++)
 	{
-		me->SetColor(1.0, 0, 1.0);
-		me->OpenGLDraw(h.values[x].startLoc);
+	  //me->SetColor(1.0, 0, 1.0);
+	  //	me->OpenGLDraw(h.values[x].startLoc);
 	}
 	
 	if (running)
 	{
-		astar.OpenGLDraw();
+	  //	astar.OpenGLDraw();
 
 		if (path.size() == 0)
 			astar.DoSingleSearchStep(path);
 		else {
 			me->SetColor(0, 1, 0);
-			glLineWidth(10);
+			//glLineWidth(10);
 			for (int x = 1; x < path.size(); x++)
 			{
-				me->GLDrawLine(path[x-1], path[x]);
+			  //me->GLDrawLine(path[x-1], path[x]);
 			}
-			glLineWidth(1);
+			//			glLineWidth(1);
 		}
 
 	}
@@ -274,12 +274,14 @@ void MyDisplayHandler(unsigned long windowID, tKeyboardModifier mod, char key)
 //		case '8': edgeCost = 8.0; te.AddLine("Adding edges; New edges cost 8"); m = kAddEdges; break;
 //		case '9': edgeCost = 9.0; te.AddLine("Adding edges; New edges cost 9"); m = kAddEdges; break;
 		case '\t':
+		  /*
 			if (mod != kShiftDown)
 				SetActivePort(windowID, (GetActivePort(windowID)+1)%GetNumPorts(windowID));
 			else
 			{
 				SetNumPorts(windowID, 1+(GetNumPorts(windowID)%MAXPORTS));
 			}
+		  */
 			break;
 		case 'p':
 			//running = !running;

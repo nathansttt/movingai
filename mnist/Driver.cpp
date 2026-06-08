@@ -163,7 +163,7 @@ int frameCnt = 0;
 void ShowImage(const image &i, bool rebuild = false)
 {
 	static image const *lastImage = 0;
-	static recColor cache[2][10][28*28];
+	static rgbColor cache[2][10][28*28];
 
 	// rebuild cache
 	if (lastImage != &i || rebuild)
@@ -225,26 +225,26 @@ void ShowImage(const image &i, bool rebuild = false)
 			{
 				if (cache[0][y][x].r > 0)
 				{
-					GLfloat color = cache[0][y][x].r/maxVal[y];
+				  float color = cache[0][y][x].r/maxVal[y];
 					cache[0][y][x].r = 1-color;
 					cache[0][y][x].g = 1-color;
 					cache[0][y][x].b = 1;
 				}
 				else {
-					GLfloat color = cache[0][y][x].r/minVal[y];
+					float color = cache[0][y][x].r/minVal[y];
 					cache[0][y][x].r = 1;
 					cache[0][y][x].g = 1-color;
 					cache[0][y][x].b = 1-color;
 				}
 				if (cache[1][y][x].r > 0)
 				{
-					GLfloat color = cache[1][y][x].r/maxWeight[y];
+					float color = cache[1][y][x].r/maxWeight[y];
 					cache[1][y][x].r = 1-color;
 					cache[1][y][x].g = 1-color;
 					cache[1][y][x].b = 1;
 				}
 				else {
-					GLfloat color = cache[1][y][x].r/minWeight[y];
+					float color = cache[1][y][x].r/minWeight[y];
 					cache[1][y][x].r = 1;
 					cache[1][y][x].g = 1-color;
 					cache[1][y][x].b = 1-color;
@@ -258,9 +258,9 @@ void ShowImage(const image &i, bool rebuild = false)
 	{
 		for (int y = 0; y < 28; y++)
 		{
-			GLfloat color = i.get(x, y)/255.0;
-			glColor3f(color, color, color);
-			DrawSquare(-1.0+x/28.0, -0.5+y/28.0, 0, 1/28.0);
+			float color = i.get(x, y)/255.0;
+			//glColor3f(color, color, color);
+			//DrawSquare(-1.0+x/28.0, -0.5+y/28.0, 0, 1/28.0);
 		}
 	}
 	
@@ -296,17 +296,21 @@ void ShowImage(const image &i, bool rebuild = false)
 	{
 		for (int y = 0; y < 28; y++)
 		{
+		  /*
 			glColor3f(input[x+y*28],
 					  input[x+y*28],
 					  input[x+y*28]);
 			DrawSquare(-0.0+x/56.0, -0.5+y/56.0, 0, 1/56.0);
+		  */
 		}
 	}
 	double *tmp = lr->test(input);
 	for (int x = 0; x < 10; x++)
 	{
+	  /*
 		glColor3f(1-tmp[x], tmp[x], 0);
 		DrawSquare(1/40.0+x/20.0, -0.55, 0.0, 1/40.0);
+	  */
 	}
 //
 //	{
@@ -327,7 +331,8 @@ void ShowImage(const image &i, bool rebuild = false)
 		{
 			if (0) // TODO: Draw green if correct classification and draw wrong
 			{
-				glColor3f(0.0, 0.0, 1.0);
+			  /*
+			  glColor3f(0.0, 0.0, 1.0);
 				glLineWidth(4.0);
 				glBegin(GL_LINE_LOOP);
 				glVertex3f(-1+0.2*i+14.0/140.0+14./140., 0.5+14.0/140.0+14./140., -0.02);
@@ -337,17 +342,19 @@ void ShowImage(const image &i, bool rebuild = false)
 				glEnd();
 				glLineWidth(4.0);
 				//DrawSquare(-1+0.2*i+x/140.0, 0.5+y/140.0, 0, 1/140.0);
-				
+				*/				
 			}
 			for (int x = 0; x < 28; x++)
 			{
 				for (int y = 0; y < 28; y++)
 				{
+				  /*
 					glColor3f(cache[1][i][x+28*y].r , cache[1][i][x+28*y].g , cache[1][i][x+28*y].b );
 					DrawSquare(-1+0.2*i+x/140.0, 0.5+y/140.0, 0, 1/140.0);
 
 					glColor3f(cache[0][i][x+28*y].r , cache[0][i][x+28*y].g , cache[0][i][x+28*y].b );
 					DrawSquare(-1+0.2*i+x/140.0, 0.7+y/140.0, 0, 1/140.0);
+				  */
 				}
 			}
 		}
